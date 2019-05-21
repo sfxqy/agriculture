@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wisdom.agriculture.dao.WarningMapper" >
+
+
+
+    <select id="getAllDid" resultType="java.lang.Integer">
+        select did from data GROUP BY did
+    </select>
+
+
+
+    <select id="getDetailsByDid" resultType="com.wisdom.agriculture.pojo.Details">
+        select warnmax,warnmin,did from  details where did=#{did}
+    </select>
+
+
+    <select id="getWarningVo" resultType="com.wisdom.agriculture.pojo.WarningVo">
+       select det.*,device.* from (select d.*,details.warnmax,details.warnmin,details.deviceid from
+        (select *from data where (value &lt;= #{warnmin} or value  &gt;= #{warnmax}) and did=#{did})d
+        LEFT JOIN details on d.did=details.did)det LEFT JOIN device on det.deviceid=device.deviceid
+    </select>
+</mapper>

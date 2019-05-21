@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wisdom.agriculture.dao.CustomerMapper" >
+
+    <select id="getCustomerByCondition" resultType="com.wisdom.agriculture.pojo.Customer">
+        select *from customer where 1=1
+        <if test="cid!=null">
+        and cid=#{cid}
+        </if>
+        <if test="username!=null">
+           and username=#{username}
+        </if>
+    </select>
+
+
+
+    <insert id="insertSelective" parameterType="com.wisdom.agriculture.pojo.Customer">
+        insert customer(
+        <if test="username!=null">username,</if>
+        <if test="password!=null">password,</if>
+        <if test="name!=null">name,</if>
+        <if test="phone!=null">phone,</if>
+        <if test="rid!=null">rid</if>
+        )
+        values (
+        <if test="username!=null">#{username},</if>
+        <if test="password!=null">#{password},</if>
+        <if test="name!=null">#{name},</if>
+        <if test="phone!=null">#{phone},</if>
+        <if test="rid!=null">#{rid}</if>
+
+        )
+    </insert>
+
+
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.wisdom.agriculture.pojo.Customer">
+        update customer
+          <set>
+              <if test="username!=null">username=#{username},</if>
+              <if test="password!=null">password=#{password},</if>
+              <if test="name!=null">name=#{name},</if>
+              <if test="phone!=null">phone=#{phone},</if>
+              <if test="rid!=null">rid=#{rid},</if>
+          </set>
+        where cid=#{cid}
+
+    </update>
+
+
+
+    <select id="selectByUsernaeOrName" resultType="com.wisdom.agriculture.pojo.Customer">
+        select *from customer where 1=1
+            <if test="username!=null"> and username=#{username}</if>
+            <if test="name!=null"> and name=#{name}</if>
+
+    </select>
+
+
+
+    <delete id="deleteCustomer">
+        delete from customer where cid=#{cid}
+
+    </delete>
+
+
+
+    <select id="getCustomerByNameOrUsername" resultType="com.wisdom.agriculture.pojo.Customer">
+        select *from customer where name=#{name} or username=#{name}
+    </select>
+
+
+
+    <select id="getAllRole" resultType="com.wisdom.agriculture.pojo.Role">
+        select *from role <if test="rname!=null">where rname=#{rname} </if> order by rid ASC
+    </select>
+
+
+
+    <insert id="addRole">
+        insert role(rid,rname) values(#{rid},#{rname})
+    </insert>
+
+
+    <delete id="deleteRole">
+        delete  from role where rid=#{rid}
+    </delete>
+
+</mapper>

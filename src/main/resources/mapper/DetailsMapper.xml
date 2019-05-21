@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wisdom.agriculture.dao.DetailsMapper" >
+
+
+
+    <select id="getDetailsByCondition" resultType="com.wisdom.agriculture.pojo.DetailsVo">
+        select
+            d.did did,
+            d.tid tid,
+            d.max max,
+            d.min min,
+            d.warnmax warnmax,
+            d.warnmin warnmin,
+            d.type type,
+            device.deid deid,
+            device.deviceid  deviceid,
+            device.devicename devicename,
+            device.appkey  appkey,
+            device.online online,
+            device.longitude longitude,
+            device.latitude latitude,
+            device.place place
+
+            from
+            (select details.*,dtype.type from details INNER JOIN dtype on
+            details.tid=dtype.tid)d INNER JOIN device on
+            device.deviceid=d.deviceid  where 1=1
+            <if test="did!=null"> and d.did=#{did}</if>
+            <if test="deviceid!=null"> and d.deviceid=#{deviceid}</if>
+            <if test="tid!=null"> and d.tid=#{tid}</if>
+    </select>
+
+
+</mapper>

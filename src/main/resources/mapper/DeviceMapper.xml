@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wisdom.agriculture.dao.DeviceMapper" >
+
+
+
+    <select id="getDeviceByCondition" resultType="com.wisdom.agriculture.pojo.Device">
+        select *from device where 1=1
+        <if test="deid!=null"> and deid=#{deid}</if>
+        <if test="deviceid!=null"> and deviceid=#{deviceid}</if>
+        <if test="devicename!=null"> and devicename=#{devicename}</if>
+        <if test="appkey!=null"> and  appkey=#{appkey}</if>
+        <if test="online!=null"> and online=#{online}</if>
+        <if test="place!=null"> and place like  "%"#{place}"%"</if> order by online desc
+    </select>
+
+
+    <insert id="addDtype">
+        insert dtype(type) values(#{type})
+    </insert>
+
+
+    <select id="getDtypeByName" resultType="com.wisdom.agriculture.pojo.Dtype">
+        select *from dtype where 1=1
+        <if test="type!=null">
+            and type=#{type}
+        </if>
+        <if test="tid!=null">
+            and tid=#{tid}
+        </if>
+    </select>
+
+
+    <select id="getAllDtype" resultType="com.wisdom.agriculture.pojo.Dtype">
+        select *from dtype where 1=1
+        <if test="tid!=null">
+            and type=#{type}
+        </if>
+        <if test="tid!=null">
+            and tid=#{tid}
+        </if>
+    </select>
+
+
+    <delete id="deleteDtype">
+        delete from dtype where tid=#{tid}
+    </delete>
+
+
+    <insert id="addDevice">
+        insert device(deviceid,deviceName,appkey,online,longitude,latitude,place)
+        values(#{deviceid},#{devicename},#{appkey},#{online},#{longitude},#{latitude},#{place})
+    </insert>
+
+
+
+    <delete id="deleteDevice">
+        delete from device where deviceId=#{deviceId}
+    </delete>
+
+
+    <update id="updataDevice">
+        update device set devicename=#{devicename},appkey=#{appkey},
+        longitude=#{longitude},latitude=#{latitude},place=#{place}
+        where deviceid=#{deviceId}
+    </update>
+
+
+    <insert id="addDetails">
+        insert details( deviceid, tid, max, min, warnmax, warnmin)
+        values( #{deviceId},#{tid}, #{max}, #{min}, #{warnmax},#{ warnmin})
+    </insert>
+
+
+    <delete id="deleteDetails">
+        delete from details where did=#{did}
+    </delete>
+
+    <update id="updateDetails">
+        update details set  deviceId=#{deviceId},tid=#{tid}, max=#{max},min=#{min},warnmax=#{warnmax},warnmin=#{warnmin} where did=#{did}
+    </update>
+
+
+    <select id="getDetailsInfo">
+        select *from details where 1=1 <if test="did!=null"> and did=#{did}</if>
+    </select>
+</mapper>
