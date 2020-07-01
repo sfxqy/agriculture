@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * @author SFX
  * 故障管理接口
@@ -27,8 +29,9 @@ public class FaultRecordController {
 
     @ApiOperation(value = "查询故障信息")
     @RequestMapping(value = "/getFaultInfo", method = RequestMethod.POST)
-    public ResultBean getFaultInfo(){
-        return new ResultBean(faultRecordService.getFaultInfo());
+    public ResultBean getFaultInfo(Integer pageNum,Integer pageSize){
+        faultRecordService.getFaultInfo();
+        return new ResultBean(faultRecordService.getFaultRecord(pageNum,pageSize));
     }
 
 
@@ -37,8 +40,15 @@ public class FaultRecordController {
             @ApiImplicitParam(name = "id", value = "编号", required = true, dataType = "int"),
     })
     @RequestMapping(value = "/deleteFault", method = RequestMethod.GET)
-    public ResultBean deleteFault(Integer id){
+    public ResultBean deleteFault(String id)throws Exception{
         faultRecordService.deleteFault(id);
-        return new ResultBean();
+        return new ResultBean("删除成功",true);
+    }
+
+
+    @ApiOperation(value = "生成故障工单")
+    @RequestMapping(value = "/getExcel", method = RequestMethod.POST)
+    public void getExcel(HttpServletResponse response){
+        faultRecordService.getExcel(response);
     }
 }

@@ -35,11 +35,12 @@ public class WarningService {
      * @return
      * @throws Exception
      */
-    public List<WarningVo> getAllWarn(Integer pageNum, Integer pageSize)throws Exception{
+    public Object[] getAllWarn(Integer pageNum, Integer pageSize)throws Exception{
         if (pageNum==null&&pageSize==null){
             pageNum=1;
             pageSize=10;
         }
+        Object[] obj=new Object[2];
         List<Details> details=new ArrayList<>();
         List<WarningVo> warningVo=new ArrayList<>();
         List<Integer> allDid=warningMapper.getAllDid();
@@ -66,8 +67,9 @@ public class WarningService {
         if (end>warningVo.size()-1)
             end=warningVo.size();
 
-
+        obj[0]=warningVo.subList(start,end);
+        obj[1]=warningVo.size();
         logger.info("开始{}   结束{}   数据量{}",start,end,warningVo.size());
-        return  warningVo.subList(start,end);
+        return  obj;
     }
 }

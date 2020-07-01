@@ -46,8 +46,9 @@ public class CustomerController {
     })
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResultBean login(HttpSession session, String username, String password)throws Exception{
-        customerService.login(session,username,password);
-        return new ResultBean("登录成功",true);
+        Customer customer= customerService.login(session,username,password);
+        customer.setPassword(null);
+        return new ResultBean("登录成功",customer,true);
     }
 
 

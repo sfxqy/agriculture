@@ -1,4 +1,4 @@
-package com.wisdom.agriculture.deviceConnectionUtil.domain;
+package com.wisdom.agriculture.deviceConn.domain;
 
 import java.net.Socket;
 
@@ -21,7 +21,7 @@ public class DeviceConnection {
 	private String deviceId;
 	private String deviceKey;
 	private Socket deviceSocket;
-	private Integer isOnline=0;//�豸�Ƿ����� 0�������� 1������
+	private Integer isOnline=0;
 	public String getDeviceId() {
 		return deviceId;
 	}

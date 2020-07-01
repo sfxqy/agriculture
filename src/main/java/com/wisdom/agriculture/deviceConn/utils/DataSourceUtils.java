@@ -1,18 +1,23 @@
-package com.wisdom.agriculture.deviceConnectionUtil.utils;
+package com.wisdom.agriculture.deviceConn.utils;
 
-
+import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
+import javax.sql.DataSource;
 
-public class DataSourceUtils {/*
+import com.mchange.v2.c3p0.ComboPooledDataSource;
+
+public class DataSourceUtils {
 	private static ComboPooledDataSource ds = new ComboPooledDataSource();
 	private static ThreadLocal<Connection> tl=new ThreadLocal<>();
 	
-	*//**
+	/**
 	 * 从线程中获取连接
 	 * @return
 	 * @throws SQLException
-	 *//*
+	 */
 	public static Connection getConnection() throws SQLException {
 		//从线程中获取conneciton
 		Connection conn = tl.get();
@@ -85,9 +90,9 @@ public class DataSourceUtils {/*
 		getConnection().setAutoCommit(false);
 	}
 	
-	*//**
+	/**
 	 * 事务提交且释放连接
-	 *//*
+	 */
 	public static void commitAndClose(){
 		Connection conn = null;
 		try {
@@ -103,9 +108,9 @@ public class DataSourceUtils {/*
 		}
 	}
 	
-	*//**
+	/**
 	 * 事务回滚且释放资源
-	 *//*
+	 */
 	public static void rollbackAndClose(){
 		Connection conn = null;
 		try {
@@ -119,5 +124,5 @@ public class DataSourceUtils {/*
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-	}*/
+	}
 }

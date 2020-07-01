@@ -1,15 +1,13 @@
-package com.wisdom.agriculture.deviceConnectionUtil.temprature;
-
-import com.wisdom.agriculture.deviceConnectionUtil.domain.DeviceConnection;
-import com.wisdom.agriculture.deviceConnectionUtil.service.DeviceService;
-import com.wisdom.agriculture.deviceConnectionUtil.service.impl.DeviceServiceImpl;
+package com.wisdom.agriculture.deviceConn.temprature;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
 
+import com.wisdom.agriculture.deviceConn.domain.DeviceConnection;
+import com.wisdom.agriculture.deviceConn.service.DeviceService;
+import com.wisdom.agriculture.deviceConn.service.impl.DeviceServiceImpl;
 
-
-
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import java.io.IOException;
@@ -20,13 +18,27 @@ import java.io.OutputStream;
 import java.net.*;
 
 
+import com.wisdom.agriculture.pojo.Details;
+import com.wisdom.agriculture.service.RedisService;
+import com.wisdom.agriculture.utils.RedisUtils;
+import com.wisdom.agriculture.utils.SpringUtil;
+import net.sf.json.JSONObject;
+import org.springframework.web.context.ContextLoader;
+import org.springframework.web.context.WebApplicationContext;
+
 class SocketServer extends Thread {
 	private Socket socket;
 	private OutputStream outputStream;
 	private InputStream in;
 	private boolean isReceive = true;
+	private RedisService redisService;
+	//private RedisUtils redisUtils=new RedisUtils();
+
+
 
 	public SocketServer(Socket socket) {
+		redisService=SpringUtil.getBean(RedisService.class);
+
 		this.socket = socket;
 		try {
 			// 设置接收客户端消息的超时的时间
@@ -57,15 +69,35 @@ class SocketServer extends Thread {
 
 				byte[] buffer = new byte[1024];
 				int length = in.read(buffer);
-				String aa=new String(buffer, 0, length);
+			 	System.out.println("info---"+new String(buffer, 0, length)+getName()+": "+getThreadGroup().activeCount());
+				Integer num=redisService.getNum();
+				if (num>=5){
+					redisService.persistence();
+					redisService.removeValue();
+				}
+				String deviceData=new String(buffer,0,length);
+				JSONObject jsonObject = JSONObject.fromObject(deviceData);
+				SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+				String time=df.format(new Date());// new Date()为获取当前系统时间
+				Iterator<String>  keys=jsonObject.keys();
+				int m=0;
+				while (keys.hasNext()) {
+					String teams = keys.next();
+					String teamsInfo = jsonObject.optString(teams);
+					System.out.println(teams+"=="+teamsInfo);
 
-				String[] temp=aa.split(",");
-				System.out.println(temp[1]);
-				System.out.println(temp[1].split(":")[1]);
-				//String number=temp[1].split(":")[1];
-				//	System.out.println(number);
 
-				System.out.println(new String(buffer, 0, length)+getName()+": "+getThreadGroup().activeCount());
+					if (m!=0){
+						Float value=Float.parseFloat(teamsInfo);
+						String key=teams+"&"+time;
+						redisService.setValue(key,value);
+					}
+					m++;
+				}
+
+
+
+
 
 			}
 
@@ -90,7 +122,9 @@ class SocketServer extends Thread {
 public class temprature extends HttpServlet {
 	private String message;
 
+
 	public void init() throws ServletException {
+
 		System.out.println("=================TCP SerVice Start！=================");
 		new Thread() {
 			public void run() {
@@ -146,12 +180,12 @@ public class temprature extends HttpServlet {
 		//设备的登陆信息
 		String deviceMsg = new String(buffer, 0, length);
 		System.out.println("设备:"+deviceMsg);
-/*
+
 		JSONObject jsonObject = JSONObject.fromObject(deviceMsg);
 		String m = jsonObject.getString("M");
 		String deviceId = jsonObject.getString("ID");
-		String appkey = jsonObject.getString("K");*/
-		DeviceConnection deviceConnection = null;//new DeviceConnection(deviceId,appkey,socket,1);
+		String appkey = jsonObject.getString("K");
+		DeviceConnection deviceConnection = new DeviceConnection(deviceId,appkey,socket,1);
 		//in.close();
 		return deviceConnection;
 	}

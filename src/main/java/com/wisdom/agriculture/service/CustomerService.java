@@ -31,7 +31,7 @@ public class CustomerService {
     @Autowired
     private CustomerMapper customerMapper;
 
-    public void login(HttpSession session,String username,String password)throws Exception{
+    public Customer login(HttpSession session,String username,String password)throws Exception{
         CheckUtil.isNull(username);
         CheckUtil.isNull(password);
         logger.info("用户登录中...");
@@ -48,6 +48,8 @@ public class CustomerService {
 
         }
         logger.info("登录成功");
+        return customers.get(0);
+
     }
 
 

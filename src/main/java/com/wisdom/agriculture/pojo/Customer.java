@@ -13,6 +13,8 @@ public class Customer {
 
     private Integer rid;
 
+    private String type;
+
     public Customer( String username, String password, String name, String phone, Integer rid) {
         this.username = username;
         this.password = password;
@@ -32,12 +34,30 @@ public class Customer {
     }
 
 
+    public Customer(Integer cid, String username, String password, String name, String phone, Integer rid, String type) {
+        this.cid = cid;
+        this.username = username;
+        this.password = password;
+        this.name = name;
+        this.phone = phone;
+        this.rid = rid;
+        this.type = type;
+    }
+
     public Customer() {
         super();
     }
 
     public Integer getCid() {
         return cid;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public void setCid(Integer cid) {

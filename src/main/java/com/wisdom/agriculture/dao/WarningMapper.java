@@ -21,4 +21,7 @@ public interface WarningMapper {
     Details getDetailsByDid(@Param("did") Integer did);
 
     List<WarningVo> getWarningVo(@Param("did") Integer did, @Param("warnmin") Float warnmin, @Param("warnmax")Float warnmax);
+
+
+    List<WarningVo>  getValueByDid (@Param("did") Integer did);
 }

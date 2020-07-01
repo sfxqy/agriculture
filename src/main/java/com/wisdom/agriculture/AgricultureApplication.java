@@ -1,7 +1,8 @@
 package com.wisdom.agriculture;
 
-import com.wisdom.agriculture.deviceConnectionUtil.temprature.temprature;
-import org.apache.ibatis.annotations.Mapper;
+
+
+import com.wisdom.agriculture.deviceConn.temprature.temprature;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
